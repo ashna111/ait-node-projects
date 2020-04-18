@@ -15,6 +15,7 @@ app.set("view engine", "ejs")
 //DB connection
 mongoose.connect("mongodb://localhost/authentication")
 
+//middleware
 const authenticated = (req, res, next) => {
     const userid = req.cookies.userid
     if (userid) {
@@ -60,6 +61,7 @@ app.post('/login', async (req, res) => {
     const result = await bcrypt.compare(password, hashedPassword)
     if (result === true) {
       res.cookie('userid', userid)
+      console.log(req.cookies)
       res.status(200).json('logged in')
     } else {
       res.status(404).json('not found')
