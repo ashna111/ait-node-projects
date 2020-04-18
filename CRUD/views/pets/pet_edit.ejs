@@ -1,0 +1,21 @@
+<%- include ('../partials/header') -%>
+
+<div>
+    <h3>Add a new pet!</h3>
+    <form method='post' action='/pets/<%= pet._id %>?_method=PUT'>
+        <div>
+            <input type='text' name="pet[name]" placeholder='Name' value='<%= pet.name %>' required>
+        </div>
+        <div>
+            <input type='text' name="pet[image_url]" placeholder='Image' value='<%= pet.image_url %>' required>
+        </div>
+        <div>
+            <textarea name="pet[description]" placeholder="Description" required><%= pet.description %></textarea>
+        </div>
+        <div>
+            <button>Edit</button>
+        </div>
+    </form>
+</div>
+
+<%- include ('../partials/footer') -%>

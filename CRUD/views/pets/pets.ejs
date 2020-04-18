@@ -1,0 +1,16 @@
+<%- include ('../partials/header') -%>
+
+<p>Pets Page</p>
+
+<% pets.forEach( (pet)=>{ %>
+
+<p><%= pet.name %></p>
+<img src='<%= pet.image_url %>'>
+<p><%= pet.description %></p>
+<a href="pets/<%= pet._id%>/edit">Edit</a>
+<form method='post' action='/pets/<%= pet._id %>?_method=DELETE'><button>Delete</button></form>
+<% }) %>
+<br>
+<a href="/pets/new">Add new pet</a>
+
+<%- include ('../partials/footer') -%>
