@@ -1,0 +1,1 @@
+Helps authenticate a user
