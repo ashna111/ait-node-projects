@@ -2,11 +2,14 @@ const express = require('express')
 const app = express();
 const mongoose = require('mongoose')
 const Auth = require('./auth.model')
-// const { authenticated } = require('../utils/middleware')
 const bcrypt = require('bcryptjs')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 
 app.use(bodyParser())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 app.set("view engine", "ejs")
 
 //DB connection
@@ -23,7 +26,11 @@ const authenticated = (req, res, next) => {
     }
   }
 
-  app.get('/signup', (req, res) => {
+app.get('/', (req, res) => {
+    res.render('index')
+})
+
+app.get('/signup', (req, res) => {
     res.render('signup')
 })
 
