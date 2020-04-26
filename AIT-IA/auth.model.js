@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const Auth = new mongoose.Schema({
-  userid: {
+  email: {
     type: String,
     required: true
   },

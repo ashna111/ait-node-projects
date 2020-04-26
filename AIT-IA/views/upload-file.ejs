@@ -1,0 +1,21 @@
+<h2>File Upload</h2>
+
+<%= typeof msg !='undefined' ? msg :'' %>
+<!-- Single File -->
+<form action="/upload" method="POST" enctype="multipart/form-data">
+    <label for="file">Single File:</label>
+    <input type="file" name="myFile" id="file" required>
+    <button type="submit">Submit</button>
+</form>
+
+<br>
+
+<!-- Multiple Files -->
+<%= typeof errmsg !='undefined' ? msg :'' %>
+<form action="/uploads" method="POST" enctype="multipart/form-data">
+    <label for="file">Multiple Files:</label>
+    <input type="file" name="myFiles" id="file" required multiple>
+    <button type="submit">Submit</button>
+</form>
+
+<a href='/logout'>Log Out</a>

@@ -19,40 +19,23 @@ mongoose.connect("mongodb://localhost/authentication")
 
 //middleware
 const authenticated = (req, res, next) => {
-    const userid = req.cookies.userid
-    if (userid) {
-      next()
-    } else {
-      res.status(400).send({
-        error: 'user not logged in'
-      })
-    }
+  const userid = req.cookies.userid
+  if (userid) {
+    next()
+  } else {
+    res.status(400).send({
+      error: 'user not logged in'
+    })
   }
+}
 
 app.get('/', (req, res) => {
-    res.render('index')
+  res.redirect('/login')
 })
 
-app.get('/signup', (req, res) => {
-    res.render('signup')
-})
 
 app.get('/login', (req, res) => {
-    res.render('login')
-})
-
-app.post('/signup', async (req, res) => {
-  const { userid, password } = req.body
-  const salt = await bcrypt.genSalt(10)
-  const hashedPassword = await bcrypt.hash(password, salt)
-  const auth = new Auth({ userid, password: hashedPassword })
-  console.log(hashedPassword)
-  try {
-    await auth.save()
-    res.status(200).json({ userid, password, id: auth._id.toString() })
-  } catch (err) {
-    console.log(err)
-  }
+  res.render('login')
 })
 
 app.post('/login', async (req, res) => {
@@ -64,7 +47,7 @@ app.post('/login', async (req, res) => {
     if (result === true) {
       res.cookie('userid', userid)
       console.log(req.cookies)
-      res.status(200).json('logged in')
+      res.redirect('/upload-file')
     } else {
       res.status(404).json('not found')
     }
@@ -73,11 +56,15 @@ app.post('/login', async (req, res) => {
   }
 })
 
+app.get('/upload-file', (req, res) => {
+  res.render('upload-file.ejs')
+})
+
 //Set storage engine
 const storage = multer.diskStorage({
   destination: './public/uploads/',
   filename: function (req, file, callback) {
-      callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
 });
 
@@ -86,7 +73,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 1000000 },
   fileFilter: function (req, file, cb) {
-      checkFileType(file, cb);
+    checkFileType(file, cb);
   }
 }).single('myFile');
 
@@ -97,42 +84,42 @@ const uploads = multer({
 // Check File Type
 function checkFileType(file, cb) {
   // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif/;
+  const filetypes = /jpeg|jpg|png|pdf|gif/;
   // Check ext
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   // Check mime
   const mimetype = filetypes.test(file.mimetype);
 
   if (mimetype && extname) {
-      return cb(null, true);
+    return cb(null, true);
   } else {
-      cb('Error: Images Only!');
+    cb('Error: Images Only!');
   }
 }
 
 app.post('/upload', (req, res) => {
   upload(req, res, (err) => {
-      if (err) {
-          res.render('index', {
-              msg: err
-          });
-      } else {
-          console.log(req.file);
-          res.send('File Uploaded!');
-      }
+    if (err) {
+      res.render('index', {
+        msg: err
+      });
+    } else {
+      console.log(req.file);
+      res.send('File Uploaded!');
+    }
   })
 })
 
 app.post('/uploads', (req, res) => [
   uploads(req, res, (err) => {
-      if (err) {
-          res.render('index', {
-              errmsg: err
-          });
-      } else {
-          console.log(req.files);
-          res.send('File Uploaded!');
-      }
+    if (err) {
+      res.render('index', {
+        errmsg: err
+      });
+    } else {
+      console.log(req.files);
+      res.send('File Uploaded!');
+    }
   })
 ])
 
@@ -146,5 +133,5 @@ app.get('/logout', authenticated, async (req, res) => {
 })
 
 app.listen(3000, () => {
-    console.log("Authentication Routes!")
+  console.log("Routes!")
 })
